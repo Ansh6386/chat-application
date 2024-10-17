@@ -1,4 +1,4 @@
-import "./addUser.css";
+/*import "./addUser.css";
 import { db } from "../../../../lib/firebase"
 import { arrayUnion, collection, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import { useState } from "react";
@@ -94,7 +94,8 @@ const AddUser = () => {
                     <span>{user.username}</span>
                 </div>
                 <button onClick={handleAdd}>Add user</button>
-            </div>}
+            </div>
+            }
 
         </div>
 
@@ -102,3 +103,154 @@ const AddUser = () => {
 };
 
 export default AddUser;
+
+*/
+
+//***************************************************************** */
+
+import "./addUser.css";
+import { db } from "../../../../lib/firebase"
+import { arrayUnion, collection, doc, getDoc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
+import { useState } from "react";
+import { useUserStore } from "../../../../lib/userStore";
+
+const AddUser = () => {
+
+    const [user, setUser] = useState(null);
+    const { currentUser } = useUserStore();
+
+    const handleSearch = async e => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const username = formData.get("username");
+
+
+        try {
+
+            const userRef = collection(db, "users");
+
+            const q = query(userRef, where("username", "==", username));
+            const querySnapShot = await getDocs(q);
+
+            if (!querySnapShot.empty) {
+                setUser(querySnapShot.docs[0].data());
+            }
+
+        } catch (err) {
+            console.log(err);
+
+        }
+    };
+
+
+    const handleAdd = async () => {
+        const chatRef = collection(db, "chats");
+        const userChatsRef = collection(db, "userchats");
+
+
+        try {
+
+            /*    const newChatRef = doc(chatRef)
+    
+                await setDoc(newChatRef, {
+                    createdAt: serverTimestamp(),
+                    messages: [],
+                });
+    
+                console.log(newChatRef.id);
+    
+                await updateDoc(doc(userChatsRef, user.id), {
+                    chats: arrayUnion({
+                        chatId: newChatRef.id,
+                        lastMessage: "",
+                        receiverId: currentUser.id,
+                        updatedAt: Date.now(),
+    
+                    }),
+                });
+                await updateDoc(doc(userChatsRef, currentUser.id), {
+                    chats: arrayUnion({
+                        chatId: newChatRef.id,
+                        lastMessage: "",
+                        receiverId: user.id,
+                        updatedAt: Date.now(),
+    
+                    }),
+                });*/
+
+            // Create a new chat
+            const newChatRef = doc(chatRef);
+
+            await setDoc(newChatRef, {
+                createdAt: serverTimestamp(),
+                messages: [],
+            });
+
+            console.log(newChatRef.id);
+
+
+            const createOrUpdateUserChat = async (userId, chatData) => {
+                const userChatDocRef = doc(userChatsRef, userId);
+                const userChatDoc = await getDoc(userChatDocRef);
+
+                if (userChatDoc.exists()) {
+                    // If the document exists, update it
+                    await updateDoc(userChatDocRef, {
+                        chats: arrayUnion(chatData)
+                    });
+                } else {
+                    // If the document doesn't exist, create it
+                    await setDoc(userChatDocRef, {
+                        chats: [chatData]
+                    });
+                }
+            };
+
+            // Chat data for both users
+            const chatDataForUser = {
+                chatId: newChatRef.id,
+                lastMessage: "",
+                receiverId: currentUser.id,
+                updatedAt: Date.now(),
+            };
+
+            const chatDataForCurrentUser = {
+                chatId: newChatRef.id,
+                lastMessage: "",
+                receiverId: user.id,
+                updatedAt: Date.now(),
+            };
+
+            // Create or update chats for both users
+            await createOrUpdateUserChat(user.id, chatDataForUser);
+            await createOrUpdateUserChat(currentUser.id, chatDataForCurrentUser);
+
+
+        } catch (err) {
+            console.log(err);
+
+        }
+    };
+
+    return (
+        <div className="addUser">
+
+            <form onSubmit={handleSearch}>
+                <input type="text" placeholder="Username" name="username" />
+                <button>Search</button>
+            </form>
+            {user && <div className="user">
+                <div className="detail">
+                    <img src={user.avatar || "./avatar.png"} alt="" />
+                    <span>{user.username}</span>
+                </div>
+
+                <button onClick={handleAdd}>Add User</button>
+            </div>}
+        </div>
+    )
+}
+
+export default AddUser;
+
+
