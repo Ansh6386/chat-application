@@ -78,7 +78,7 @@
 
                 .texts {
                     p {
-                        background-color: rgb(59, 59, 66);
+                        background-color: rgb(8, 157, 77);
                         border: none;
                         border-radius: 5px;
                     }
@@ -109,13 +109,13 @@
                 p {
                     padding: 20px;
                     color: white;
-                    background-color: rgb(28, 164, 146);
+                    background-color: rgb(124, 128, 127);
                     border-radius: 10px;
                 }
 
                 span {
                     font-size: 13px;
-                    color: white;
+                    color: rgb(248, 246, 246);
                 }
             }
         }
@@ -152,6 +152,11 @@
             font-size: 16px;
             color: black;
 
+            &:disabled {
+
+                cursor: not-allowed;
+            }
+
         }
 
         .emoji {
@@ -173,6 +178,14 @@
             border-radius: 6px;
             cursor: pointer;
 
+            &:disabled {
+
+                background-color: rgb(163, 163, 244);
+                cursor: not-allowed;
+            }
+
         }
     }
+
+   
 }

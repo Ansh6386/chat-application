@@ -178,7 +178,7 @@ const AddUser = () => {
                     }),
                 });*/
 
-            // Create a new chat
+
             const newChatRef = doc(chatRef);
 
             await setDoc(newChatRef, {
@@ -194,19 +194,19 @@ const AddUser = () => {
                 const userChatDoc = await getDoc(userChatDocRef);
 
                 if (userChatDoc.exists()) {
-                    // If the document exists, update it
+
                     await updateDoc(userChatDocRef, {
                         chats: arrayUnion(chatData)
                     });
                 } else {
-                    // If the document doesn't exist, create it
+
                     await setDoc(userChatDocRef, {
                         chats: [chatData]
                     });
                 }
             };
 
-            // Chat data for both users
+
             const chatDataForUser = {
                 chatId: newChatRef.id,
                 lastMessage: "",
@@ -221,7 +221,7 @@ const AddUser = () => {
                 updatedAt: Date.now(),
             };
 
-            // Create or update chats for both users
+
             await createOrUpdateUserChat(user.id, chatDataForUser);
             await createOrUpdateUserChat(currentUser.id, chatDataForCurrentUser);
 

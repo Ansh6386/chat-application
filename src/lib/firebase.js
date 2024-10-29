@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
+/*import { initializeApp } from "firebase/app";
 import {getAuth} from "firebase/auth";
 import {getFirestore} from "firebase/firestore";
 import {getStorage} from "firebase/storage";
@@ -15,6 +15,29 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+export const auth = getAuth()
+export const db = getFirestore()
+export const storage = getStorage()  */
+
+
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+
+const firebaseConfig = {
+    apiKey: import.meta.env.VITE_API_KEY,
+    authDomain: "chitchat-a544b.firebaseapp.com",
+    projectId: "chitchat-a544b",
+    storageBucket: "chitchat-a544b.appspot.com",
+    messagingSenderId: "1093812811570",
+    appId: "1:1093812811570:web:1369e3c2ff709db19d092b",
+    measurementId: "G-VLD6N1XJG9"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 export const auth = getAuth()
 export const db = getFirestore()
 export const storage = getStorage()
